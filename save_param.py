@@ -18,6 +18,7 @@ class SaveParamsSVG:
                 "font_family": ("STRING", {"default": "Arial"}),
                 "font_size": ("INT", {"default": 36}),
                 "dark_mode": ("BOOLEAN", {"default": False}),
+                "save_svg": ("BOOLEAN", {"default": True}),
                 "save_yaml": ("BOOLEAN", {"default": True}),
                 "prompt": ("STRING", {"multiline": True}),
             },
@@ -52,7 +53,7 @@ class SaveParamsSVG:
 
     def save(self, seed, steps, model, author, output_path, file_prefix,
              wrap_width, font_family, font_size, dark_mode, prompt, 
-             negative_prompt=None, additional_text=None, save_yaml=True):
+             negative_prompt=None, additional_text=None, save_svg=True, save_yaml=True):
 
         if not author.strip():
             raise ValueError("❌ The 'author' field must not be empty.")
@@ -132,7 +133,12 @@ class SaveParamsSVG:
                     dwg.add(dwg.text(line, insert=("20px", f"{y}px"),
                                     font_size=f"{font_size}px", font_family=font_family, fill=mid_tone_color))
 
-        dwg.save()
+        # === SVG save ===
+        if save_svg:
+            dwg.save()
+            print(f"✅ SVG saved to: {svg_path}")
+        else:
+            print("⏭️ SVG save skipped.")
 
         # === YAML save ===
         if save_yaml:
